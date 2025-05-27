@@ -30,7 +30,7 @@ git clone https://github.com/yourusername/certbot-dns-hostgator.git
 cd certbot-dns-hostgator
 ```
 
-2. Create a configuration file named `hostgator.ini` in the same directory:
+2. Edit the configuration file named `hostgator.ini` in the same directory:
 
 ```ini
 [cpanel]
