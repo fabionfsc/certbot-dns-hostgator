@@ -13,7 +13,7 @@ CPANEL_USER = config["cpanel"]["user"]
 CPANEL_TOKEN = config["cpanel"]["token"]
 DOMAIN = config["cpanel"]["domain"]
 CPANEL_HOST = config["cpanel"]["host"]
-CPANEL_API = f"https://{CPANEL_HOST}:2083/json-api/cpanel"
+CPANEL_API = "https://{CPANEL_HOST}:2083/json-api/cpanel"
 
 # Retrieve data provided by Certbot via environment variables
 dns_domain = os.environ.get("CERTBOT_DOMAIN")
