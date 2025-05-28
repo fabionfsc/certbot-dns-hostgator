@@ -26,7 +26,7 @@ This script automates the creation of the `_acme-challenge` TXT record required 
 1. Clone this repository:
 
 ```bash
-git clone https://github.com/yourusername/certbot-dns-hostgator.git
+git clone https://github.com/fabionfsc/certbot-dns-hostgator.git
 cd certbot-dns-hostgator
 ```
 
