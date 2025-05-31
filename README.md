@@ -24,7 +24,7 @@ This repository now contains two scripts:
 - Adds and removes `_acme-challenge` TXT records automatically.  
 - Supports wildcard certificates.  
 - Simple configuration via `hostgator.ini`.  
-- No external dependencies beyond `curl`, `python3`, and optionally `python3-dnspython` for DNS propagation checks.
+- No external dependencies beyond `curl`, `python3`, and `python3-dnspython` for DNS propagation checks.
 
 ## Requirements
 
@@ -42,12 +42,7 @@ Before running the scripts, install the following package for DNS checks:
 sudo apt update && sudo apt install python3-dnspython -y
 ```
 
-> **Note**: `python3-dnspython` is required if you want `dns_hostgator.py` to validate DNS propagation using Python's `dns.resolver`.  
-> Alternatively, install via pip if your distribution doesn't provide it:
-
-```bash
-pip3 install dnspython
-```
+> **Note**: `python3-dnspython` is required to validate DNS propagation using Python's `dns.resolver`.
 
 ## Setup
 
