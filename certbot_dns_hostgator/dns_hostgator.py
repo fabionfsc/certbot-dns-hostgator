@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-
 import os
 import subprocess
 import time
 import configparser
 import dns.resolver
 
-# Load external configuration
+# Load config
 config = configparser.ConfigParser()
 config.read(os.path.join(os.path.dirname(__file__), "hostgator.ini"))
 
@@ -30,9 +29,8 @@ print(f"[+] Managing DNS for domain: {dns_domain}")
 print(f"[+] TXT record value to be added: {dns_token}")
 print(f"[+] Record name used: {record_name}")
 
-# Save the TXT token to a file in /tmp/txt/
-os.makedirs("/tmp/txt", exist_ok=True)
-with open("/tmp/txt/token.txt", "w") as f:
+# Save the TXT token to a file
+with open("/tmp/value_record.json", "w") as f:
     f.write(dns_token)
 
 # Add TXT record via cPanel API
