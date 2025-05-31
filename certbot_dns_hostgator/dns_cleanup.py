@@ -10,7 +10,7 @@ TOKEN_FILE = "/tmp/value_record.json"
 RAW_OUTPUT = "/tmp/zone_records_raw.json"
 FORMATTED_OUTPUT = "/tmp/zone_records_formatted.json"
 
-# Load config
+# Load configuration from hostgator.ini
 config_path = os.path.join(os.path.dirname(__file__), "hostgator.ini")
 config = configparser.ConfigParser()
 config.read(config_path)
@@ -103,7 +103,7 @@ if not target_line:
     print("[-] No matching TXT record found.")
     sys.exit(1)
 
-# Step 4: Delete the matching TXT record by line (usando remove_zone_record)
+# Step 4: Delete the matching TXT record by line
 curl_delete = [
     "curl", "-ks",
     "-H", f"Authorization: cpanel {CPANEL_USER}:{CPANEL_TOKEN}",
