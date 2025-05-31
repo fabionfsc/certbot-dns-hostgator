@@ -4,8 +4,9 @@ import os
 import subprocess
 import time
 import configparser
+import dns.resolver
 
-# Load external configuration file located in the same directory as the script
+# Load external configuration
 config = configparser.ConfigParser()
 config.read(os.path.join(os.path.dirname(__file__), "hostgator.ini"))
 
@@ -15,16 +16,26 @@ DOMAIN = config["cpanel"]["domain"]
 CPANEL_HOST = config["cpanel"]["host"]
 CPANEL_API = f"https://{CPANEL_HOST}:2083/json-api/cpanel"
 
-# Retrieve data provided by Certbot via environment variables
+# Environment variables from Certbot
 dns_domain = os.environ.get("CERTBOT_DOMAIN")
 dns_token = os.environ.get("CERTBOT_VALIDATION")
-record_name = "_acme-challenge"
 
-# Debug output for tracking variables
+# Build correct record name (handles subdomains)
+record_name = "_acme-challenge"
+if dns_domain != DOMAIN:
+    subdomain = dns_domain.replace(f".{DOMAIN}", "")
+    record_name = f"_acme-challenge.{subdomain}"
+
 print(f"[+] Managing DNS for domain: {dns_domain}")
 print(f"[+] TXT record value to be added: {dns_token}")
+print(f"[+] Record name used: {record_name}")
 
-# Construct the curl command to add a TXT record via cPanel API
+# Save the TXT token to a file in /tmp/txt/
+os.makedirs("/tmp/txt", exist_ok=True)
+with open("/tmp/txt/token.txt", "w") as f:
+    f.write(dns_token)
+
+# Add TXT record via cPanel API
 curl_cmd = [
     "curl", "-k", "-X", "GET", CPANEL_API,
     "-H", f"Authorization: cpanel {CPANEL_USER}:{CPANEL_TOKEN}",
@@ -40,7 +51,6 @@ curl_cmd = [
     "--data-urlencode", "ttl=60"
 ]
 
-# Execute the curl command and handle potential errors
 try:
     result = subprocess.run(curl_cmd, check=True, capture_output=True, text=True)
     print("[+] API response:\n", result.stdout)
@@ -49,6 +59,23 @@ except subprocess.CalledProcessError as e:
     print(e.stderr)
     exit(1)
 
-# Pause to allow DNS record propagation
-print("[*] Waiting for DNS propagation...")
-time.sleep(30)
+# Wait until the TXT record propagates to DNS
+def wait_for_dns_record(fqdn, expected_value, timeout=180, interval=10):
+    print(f"[*] Waiting for TXT record {fqdn} to propagate...")
+    for _ in range(timeout // interval):
+        try:
+            answers = dns.resolver.resolve(fqdn, 'TXT')
+            for rdata in answers:
+                if expected_value in str(rdata):
+                    print("[+] TXT record found in DNS!")
+                    return True
+        except Exception:
+            pass
+        time.sleep(interval)
+    print("[-] TXT record did not propagate in time.")
+    return False
+
+fqdn_check = f"_acme-challenge.{dns_domain}".strip(".")
+if not wait_for_dns_record(fqdn_check, dns_token):
+    print("[-] DNS propagation check failed. Exiting.")
+    exit(1)
