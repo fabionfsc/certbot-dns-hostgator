@@ -83,7 +83,7 @@ pip3 install dnspython
 Run Certbot with `dns_hostgator.py` as the manual authentication hook:
 
 ```bash
-certbot certonly   --manual   --preferred-challenges dns   --manual-auth-hook "/full/path/to/dns_hostgator.py"   -d '*.yourdomain.com'   --agree-tos   --no-eff-email   --email your.email@example.com
+certbot certonly --manual --preferred-challenges dns --manual-auth-hook "/full/path/to/dns_hostgator.py" -d '*.yourdomain.com' --agree-tos --no-eff-email --email your.email@example.com
 ```
 
 - `dns_hostgator.py` will:
@@ -117,7 +117,7 @@ python3 /full/path/to/dns_cleanup.py
 1. **Request certificate** (adds TXT record and waits for propagation):
 
     ```bash
-    certbot certonly       --manual       --preferred-challenges dns       --manual-auth-hook "/home/user/certbot-dns-hostgator/dns_hostgator.py"       -d 'webmail.yourdomain.com'       --agree-tos       --no-eff-email       --email user@example.com
+    certbot certonly --manual --preferred-challenges dns --manual-auth-hook "/home/user/certbot-dns-hostgator/dns_hostgator.py" -d 'webmail.yourdomain.com' --agree-tos       --no-eff-email --email user@example.com
     ```
 
 2. **Remove the validation TXT record**:
