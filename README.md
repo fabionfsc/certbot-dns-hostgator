@@ -10,14 +10,14 @@ This repository contains two scripts:
 - **dns_hostgator.py**:  
   - Adds a TXT record via HostGator's cPanel JSON API based on the `CERTBOT_DOMAIN` and `CERTBOT_VALIDATION` environment variables provided by Certbot.  
   - Waits for DNS propagation to ensure Let's Encrypt can validate the record.  
-  - Saves the validation token temporarily to `/tmp/txt/token.txt`.
+  - Saves the validation token temporarily to `/tmp/value_record.json`.
 
 - **dns_cleanup.py**:  
-  - Reads the validation token from `/tmp/txt/token.txt`.  
+  - Reads the validation token from `/tmp/value_record.json`.  
   - Fetches all TXT records in the DNS zone using cPanel's `fetchzone_records` API call.  
   - Filters the records to find the one matching the token.  
   - Removes the matching record via cPanel's `remove_zone_record` API call.  
-  - Cleans up temporary files (`/tmp/txt/token.txt`, `/tmp/zone_records_raw.json`, `/tmp/zone_records_formatted.json`).
+  - Cleans up temporary files (`/tmp/value_record.json`, `/tmp/zone_records_raw.json`, `/tmp/zone_records_formatted.json`).
 
 ## Features
 
