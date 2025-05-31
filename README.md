@@ -109,7 +109,7 @@ python3 /full/path/to/dns_cleanup.py
 - Both scripts rely purely on cPanel's JSON API via HTTP `curl` calls.
 - If DNS propagation is slow, increase the timeout or interval inside `dns_hostgator.py`.
 - Ensure that your API token has permission to edit DNS zones.
-- This version includes automatic zone detection and authoritative nameserver resolution.
+- The script automatically detects the correct DNS zone and resolves the authoritative nameservers.
 
 ## Example Workflow
 
