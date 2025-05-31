@@ -6,7 +6,7 @@ import subprocess
 import configparser
 
 # Paths
-TOKEN_FILE = "/tmp/txt/token.txt"
+TOKEN_FILE = "/tmp/value_record.json"
 RAW_OUTPUT = "/tmp/zone_records_raw.json"
 FORMATTED_OUTPUT = "/tmp/zone_records_formatted.json"
 
