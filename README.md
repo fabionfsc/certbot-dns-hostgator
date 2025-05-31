@@ -1,7 +1,7 @@
 # certbot-dns-hostgator
 
 A minimal Certbot DNS-01 automation solution for HostGator cPanel using the JSON API.  
-This repository now contains two scripts:
+This repository contains two scripts:
 1. **dns_hostgator.py** – Automates the creation of the `_acme-challenge` TXT record for Let's Encrypt DNS-01 challenges.  
 2. **dns_cleanup.py** – Automatically removes the TXT record after validation.
 
