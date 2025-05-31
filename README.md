@@ -3,7 +3,7 @@
 A minimal Certbot DNS-01 automation solution for HostGator cPanel using the JSON API.  
 This repository contains two scripts:
 1. **dns_hostgator.py** – Automates the creation of the `_acme-challenge` TXT record for Let's Encrypt DNS-01 challenges.  
-2. **dns_cleanup.py** – Automatically removes the TXT record after validation.
+2. **dns_cleanup.py** – Removes the TXT record.
 
 ## Description
 
@@ -53,7 +53,7 @@ sudo apt update && sudo apt install python3-dnspython -y
     cd certbot-dns-hostgator
     ```
 
-2. Create or edit the configuration file `hostgator.ini` in the same directory:
+2. Edit the configuration file `hostgator.ini` in the same directory:
 
     ```ini
     [cpanel]
@@ -88,7 +88,7 @@ certbot certonly --manual --preferred-challenges dns --manual-auth-hook "/full/p
 
 ### 2. Cleaning up the TXT record
 
-After Certbot completes validation (or as a separate step), run:
+After Certbot completes validation, run:
 
 ```bash
 python3 /full/path/to/dns_cleanup.py
@@ -105,14 +105,13 @@ python3 /full/path/to/dns_cleanup.py
 - Both scripts rely purely on cPanel's JSON API via HTTP `curl` calls.
 - If DNS propagation is slow, increase the timeout or interval inside `dns_hostgator.py`.
 - Ensure that your API token has permission to edit DNS zones.
-- In rare cases, cPanel may return errors if API functions are unavailable—verify your cPanel version and available modules.
-
+- 
 ## Example Workflow
 
 1. **Request certificate** (adds TXT record and waits for propagation):
 
     ```bash
-    certbot certonly --manual --preferred-challenges dns --manual-auth-hook "/home/user/certbot-dns-hostgator/dns_hostgator.py" -d 'webmail.yourdomain.com' --agree-tos --no-eff-email --email user@example.com
+    certbot certonly --manual --preferred-challenges dns --manual-auth-hook "/home/user/certbot-dns-hostgator/certbot_dns_hostgator/dns_hostgator.py" -d 'webmail.yourdomain.com' --agree-tos --no-eff-email --email user@example.com
     ```
 
 2. **Remove the validation TXT record**:
@@ -123,4 +122,4 @@ python3 /full/path/to/dns_cleanup.py
 
 ## Disclaimer
 
-This project is unofficial and not affiliated with HostGator. Use at your own risk.
+This project is unofficial and not affiliated with HostGator.
