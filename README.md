@@ -21,6 +21,22 @@ This script automates the creation of the `_acme-challenge` TXT record required 
   - cPanel access
   - An API token with DNS zone edit permissions
 
+## Dependencies
+
+Before running the script, make sure the following packages are installed:
+
+```bash
+sudo apt update && sudo apt install python3-dnspython -y
+```
+
+> ⚠️ `python3-dnspython` is required if the script validates DNS propagation using Python's `dns.resolver`.
+
+Alternatively, you can install it via pip if your distro doesn't ship it via `apt`:
+
+```bash
+pip3 install dnspython
+```
+
 ## Setup
 
 1. Clone this repository:
@@ -71,5 +87,3 @@ certbot certonly \
 ## Disclaimer
 
 This project is unofficial and not affiliated with HostGator. Use at your own risk.
-
----
