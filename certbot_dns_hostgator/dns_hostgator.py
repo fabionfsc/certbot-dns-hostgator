@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 import os
+import sys
 import subprocess
 import time
 import configparser
 import dns.resolver
 
-# Load config
+# Load configuration from hostgator.ini
 config = configparser.ConfigParser()
 config.read(os.path.join(os.path.dirname(__file__), "hostgator.ini"))
 
@@ -15,7 +16,7 @@ DOMAIN = config["cpanel"]["domain"]
 CPANEL_HOST = config["cpanel"]["host"]
 CPANEL_API = f"https://{CPANEL_HOST}:2083/json-api/cpanel"
 
-# Environment variables from Certbot
+# Environment variables provided by Certbot
 dns_domain = os.environ.get("CERTBOT_DOMAIN")
 dns_token = os.environ.get("CERTBOT_VALIDATION")
 
@@ -29,7 +30,7 @@ print(f"[+] Managing DNS for domain: {dns_domain}")
 print(f"[+] TXT record value to be added: {dns_token}")
 print(f"[+] Record name used: {record_name}")
 
-# Save the TXT token to a file
+# Save the TXT token as a simple string in a .json file (for reference)
 with open("/tmp/value_record.json", "w") as f:
     f.write(dns_token)
 
@@ -55,7 +56,7 @@ try:
 except subprocess.CalledProcessError as e:
     print("[-] Failed to call cPanel API:")
     print(e.stderr)
-    exit(1)
+    sys.exit(1)
 
 # Wait until the TXT record propagates to DNS
 def wait_for_dns_record(fqdn, expected_value, timeout=180, interval=10):
@@ -76,4 +77,4 @@ def wait_for_dns_record(fqdn, expected_value, timeout=180, interval=10):
 fqdn_check = f"_acme-challenge.{dns_domain}".strip(".")
 if not wait_for_dns_record(fqdn_check, dns_token):
     print("[-] DNS propagation check failed. Exiting.")
-    exit(1)
+    sys.exit(1)
