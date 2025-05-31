@@ -1,3 +1,4 @@
+
 # certbot-dns-hostgator
 
 A minimal Certbot DNS-01 automation solution for HostGator cPanel using the JSON API.  
@@ -8,8 +9,10 @@ This repository contains two scripts:
 ## Description
 
 - **dns_hostgator.py**:  
+  - Parses the domain from `hostgator.ini` for automatic zone detection.  
   - Adds a TXT record via HostGator's cPanel JSON API based on the `CERTBOT_DOMAIN` and `CERTBOT_VALIDATION` environment variables provided by Certbot.  
-  - Waits for DNS propagation to ensure Let's Encrypt can validate the record.  
+  - Automatically detects authoritative nameservers for the domain using a `dig` query.  
+  - Waits for DNS propagation using the authoritative NS IPs, ensuring accurate and fast validation.  
   - Saves the validation token temporarily to `/tmp/value_record.json`.
 
 - **dns_cleanup.py**:  
@@ -22,9 +25,10 @@ This repository contains two scripts:
 ## Features
 
 - Adds and removes `_acme-challenge` TXT records automatically.  
+- Automatically resolves NS IPs for accurate DNS propagation checks.  
 - Supports wildcard certificates.  
 - Simple configuration via `hostgator.ini`.  
-- No external dependencies beyond `curl`, `python3`, and `python3-dnspython` for DNS propagation checks.
+- No external dependencies beyond `curl`, `python3`, and `python3-dnspython`.
 
 ## Requirements
 
@@ -83,8 +87,8 @@ certbot certonly --manual --preferred-challenges dns --manual-auth-hook "/full/p
 
 - `dns_hostgator.py` will:
   - Add `_acme-challenge.<subdomain>` TXT record using the cPanel API.
-  - Save the validation token to `/tmp/txt/token.txt`.
-  - Wait for DNS propagation before allowing Certbot to proceed.
+  - Automatically resolve NS IPs and check propagation against them.
+  - Wait until the TXT record is resolvable before Certbot proceeds.
 
 ### 2. Cleaning up the TXT record
 
@@ -95,17 +99,18 @@ python3 /full/path/to/dns_cleanup.py
 ```
 
 - `dns_cleanup.py` will:
-  - Read the validation token from `/tmp/txt/token.txt`.
+  - Read the validation token from `/tmp/value_record.json`.
   - Fetch all TXT records in your DNS zone.
   - Find and delete the matching record.
-  - Remove temporary files (`/tmp/txt/token.txt`, `/tmp/zone_records_raw.json`, `/tmp/zone_records_formatted.json`).
+  - Remove temporary files (`/tmp/value_record.json`, `/tmp/zone_records_raw.json`, `/tmp/zone_records_formatted.json`).
 
 ## Notes
 
 - Both scripts rely purely on cPanel's JSON API via HTTP `curl` calls.
 - If DNS propagation is slow, increase the timeout or interval inside `dns_hostgator.py`.
 - Ensure that your API token has permission to edit DNS zones.
-- 
+- This version includes automatic zone detection and authoritative nameserver resolution.
+
 ## Example Workflow
 
 1. **Request certificate** (adds TXT record and waits for propagation):
