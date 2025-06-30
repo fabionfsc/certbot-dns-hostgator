@@ -82,7 +82,7 @@ def get_ns_ips(domain_name):
                 ips.append(rdata.to_text())
         except Exception as e:
             print(f"[!] Warning: could not resolve A record for NS {ns_host}: {e}")
-            # Continua para o próximo nameserver
+            # Continue to next nameserver
             continue
 
     return ips
@@ -116,7 +116,7 @@ def wait_for_dns_record(fqdn, expected_value, resolver_ips, timeout=300, interva
                     print("[+] TXT record found in DNS!")
                     return True
         except Exception:
-            # Ignorar qualquer exceção e tentar de novo após sleep
+            # Ignore any exceptions and try again after sleeping
             pass
         time.sleep(interval)
 
@@ -125,10 +125,10 @@ def wait_for_dns_record(fqdn, expected_value, resolver_ips, timeout=300, interva
 
 fqdn_check = f"_acme-challenge.{dns_domain}".strip(".")
 
-# If the record doesn't propagate, we opt to continue with exit code 0 (Certbot não vai reclamar)
+# If the record doesn't propagate, we opt to continue with exit code 0
 if not wait_for_dns_record(fqdn_check, dns_token, auth_ns_ips, timeout=300, interval=10):
     print("[-] DNS propagation check failed. Continuing anyway (exit 0).")
     sys.exit(0)
 
-# If we get here, the TXT was encontrado no authoritative NS
+# If we get here, the TXT was found in the authoritative NS
 sys.exit(0)
